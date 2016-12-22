@@ -72,12 +72,14 @@
 
 		function submitEmail() {
 			var address = document.getElementById("email").value;
+			document.getElementById("email").disabled = true;
 			document.getElementById("button").disabled = true;
 			if(checkValid(address)) {
 				email(address);
 			} else {
 				document.getElementById("email").value = ' ';
 				document.getElementById("button").disabled = false;
+				document.getElementById("email").disabled = false;
 			}
 		}
 		
@@ -85,7 +87,7 @@
 			emailjs.send("gmail", "template_u5loWvLb", {"email":address})
 			.then(function(response) {
 				console.log("SUCCESS. status=%d, text=%s", response.status, response.text);
-				document.getElementById("submission").innerHTML = "Thank You."
+				document.getElementById("submission").innerHTML = "Thanks, bae"
 			}, function(err) {
 				console.log("FAILED. error=", err);
 			});
