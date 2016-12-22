@@ -71,13 +71,35 @@
 		function submit() {
 			var address = document.getElementById("email").value;
 			document.getElementById("button").disabled = true;
+			if(checkValid(address)) {
+				email(address);
+			} else {
+				document.getElementById("email").value = ' ';
+				document.getElementById("button").disabled = false;
+			}
+		}
+		
+		function email(address) {
 			emailjs.send("gmail", "template_u5loWvLb", {"email":address})
-				.then(function(response) {
-					console.log("SUCCESS. status=%d, text=%s", response.status, response.text);
-					document.getElementById("submission").innerHTML = "Thank You."
-				}, function(err) {
-					console.log("FAILED. error=", err);
-				});
+			.then(function(response) {
+				console.log("SUCCESS. status=%d, text=%s", response.status, response.text);
+				document.getElementById("submission").innerHTML = "Thank You."
+			}, function(err) {
+				console.log("FAILED. error=", err);
+			});
+		}
+		
+		function checkValid(email) {
+		  if(email.indexOf('@') == -1)
+		    return false;
+		  if(email.indexOf(' ') != -1)
+		    return false;
+		  if(email.substring(email.indexOf('@')).indexOf('.') == -1)
+		    return false;
+		  if(email.length < 5)
+		    return false;
+
+		  return true
 		}
 	</script>
 
