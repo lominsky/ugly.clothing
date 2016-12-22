@@ -56,8 +56,8 @@
 				<img src="logo.png" width="400">
 			</div>
 			<br><br>
-			<div id="submission">
-				<form onsubmit="submitEmail()" style="width:99%;text-align: center;">
+			<div id="submission" style="width:99%;text-align: center;">
+				<form onsubmit="submitEmail()">
 					<input id="email" type="email" placeholder="ugly? Enter your email">
 					<input type="submit" value="Submit" id="button">
 				</form>
@@ -72,7 +72,6 @@
 
 		function submitEmail() {
 			var address = document.getElementById("email").value;
-			console.log(address);
 			document.getElementById("button").disabled = true;
 			if(checkValid(address)) {
 				email(address);
