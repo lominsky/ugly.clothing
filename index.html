@@ -57,10 +57,8 @@
 			</div>
 			<br><br>
 			<div id="submission" style="width:99%;text-align: center;">
-				<form onsubmit="submitEmail()">
-					<input id="email" type="email" placeholder="ugly? Enter your email">
-					<input type="submit" value="Submit" id="button">
-				</form>
+				<input id="email" type="email" placeholder="ugly? Enter your email">
+				<button id="button" onclick="submitEmail()">Submit</button>
 			</div>
 		</div>
 	</body>
@@ -69,6 +67,14 @@
 		(function(){
 			emailjs.init("user_uXnD0BFBohHv4otginwf9");
 		})();
+
+		document.getElementById("email")
+		    .addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode == 13) {
+		        submitEmail();
+		    }
+		});
 
 		function submitEmail() {
 			var address = document.getElementById("email").value;
@@ -83,7 +89,7 @@
 			}
 		}
 		
-		function email(address) {
+		function email(address) {	
 			emailjs.send("gmail", "template_u5loWvLb", {"email":address})
 			.then(function(response) {
 				console.log("SUCCESS. status=%d, text=%s", response.status, response.text);
