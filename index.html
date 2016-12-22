@@ -56,10 +56,12 @@
 				<img src="logo.png" width="400">
 			</div>
 			<br><br>
-			<form action="#" onSubmit="submit()" id="submission" style="width:99%;text-align: center;">
-				<input id="email" type="email" placeholder="ugly? Enter your email">
-  				<input type="submit" value="Submit" id="button">
-			</form>
+			<div id="submission">
+				<form action="#" onSubmit="submit()" style="width:99%;text-align: center;">
+					<input id="email" type="email" placeholder="ugly? Enter your email">
+					<input type="submit" value="Submit" id="button">
+				</form>
+			</div>
 		</div>
 	</body>
 
@@ -70,6 +72,7 @@
 
 		function submit() {
 			var address = document.getElementById("email").value;
+			console.log(address);
 			document.getElementById("button").disabled = true;
 			if(checkValid(address)) {
 				email(address);
