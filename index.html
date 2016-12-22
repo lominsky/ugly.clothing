@@ -57,7 +57,7 @@
 			</div>
 			<br><br>
 			<div id="submission">
-				<form action="#" onsubmit="submit()" style="width:99%;text-align: center;">
+				<form onsubmit="submitEmail()" style="width:99%;text-align: center;">
 					<input id="email" type="email" placeholder="ugly? Enter your email">
 					<input type="submit" value="Submit" id="button">
 				</form>
@@ -70,7 +70,7 @@
 			emailjs.init("user_uXnD0BFBohHv4otginwf9");
 		})();
 
-		function submit() {
+		function submitEmail() {
 			var address = document.getElementById("email").value;
 			console.log(address);
 			document.getElementById("button").disabled = true;
