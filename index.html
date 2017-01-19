@@ -1,5 +1,6 @@
 <html>
-	<script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -8,6 +9,15 @@
 
 		ga('create', 'UA-89368417-1', 'auto');
 		ga('send', 'pageview');
+
+		var config = {
+	    apiKey: "AIzaSyCNfAl-ENmtYFdizw5nIMGUN67SJhNysXw",
+	    authDomain: "ugly-clothing.firebaseapp.com",
+	    databaseURL: "https://ugly-clothing.firebaseio.com",
+	    storageBucket: "ugly-clothing.appspot.com",
+	    messagingSenderId: "912016071315"
+	  };
+		firebase.initializeApp(config);
 	</script>
 
 	<style>
@@ -64,10 +74,6 @@
 	</body>
 
 	<script>
-		(function(){
-			emailjs.init("user_uXnD0BFBohHv4otginwf9");
-		})();
-
 		document.getElementById("email")
 		    .addEventListener("keyup", function(event) {
 		    event.preventDefault();
@@ -90,13 +96,18 @@
 		}
 		
 		function email(address) {	
-			emailjs.send("gmail", "template_u5loWvLb", {"email":address})
-			.then(function(response) {
-				console.log("SUCCESS. status=%d, text=%s", response.status, response.text);
-				document.getElementById("submission").innerHTML = "Thanks, bae"
-			}, function(err) {
-				console.log("FAILED. error=", err);
+			var ip_address = "";
+			$.getJSON('https://api.ipify.org', function(data){
+			    console.log(data);
+			    ip_address = data;
 			});
+
+			firebase.database().ref('emails/').push({
+		    email: address,
+		    date: firebase.database.ServerValue.TIMESTAMP,
+		    ip : ip_address
+		  });
+			document.getElementById("submission").innerHTML = "Thanks, bae"
 		}
 		
 		function checkValid(email) {
