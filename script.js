@@ -16,12 +16,12 @@ function init() {
     document.getElementById("table-div").style.display = "block";
     document.getElementById("log-out").style.display = "block";
     document.getElementById("login-div").style.display = "none";
-    return firebase.database().ref('/emails').orderByChild('date').once('value').then(function(snapshot) {
+    data = [];
+    firebase.database().ref('/emails').orderByChild('date').once('value').then(function(snapshot) {
       snapshot.forEach(function(child) {
           data.push(child.val())
       });
       addToTable();
-      console.log(data);
     });  
   } else {
       // No user is signed in.
@@ -35,20 +35,22 @@ function init() {
 function login() {
   var email = document.getElementById("email").value;
   var password = document.getElementById("password").value;
-  console.log(email + ", " + password);
   firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
     // ...
+    data = [];
+    location.reload();
+    init(); 
   });
-  console.log(firebase.auth().user);
-  init(); 
 }
 
 function logout() {
   firebase.auth().signOut().then(function() {
     // Sign-out successful.
+    data = [];
+    location.reload();
     init();
   }, function(error) {
     // An error happened.
@@ -57,9 +59,10 @@ function logout() {
 
 function addToTable() {
   var table = document.getElementById('table');
+  console.log(data);
 
   while (table.childElementCount > 1) {
-      scoreTable.removeChild(scoreTable.lastChild);
+      table.removeChild(table.lastChild);
   }
 
   for(var i = 0; i < data.length; i++) {
@@ -70,7 +73,10 @@ function addToTable() {
     row.appendChild(c1);
 
     var c2 = document.createElement('td');
-    c2.innerHTML = data[i].date;
+    var time = new Date(data[i].date);
+    time = time.toString();
+    time = time.substring(0, time.length-15);
+    c2.innerHTML = time;
     row.appendChild(c2);
 
     var c3 = document.createElement('td');
@@ -79,4 +85,18 @@ function addToTable() {
 
     table.appendChild(row);
   }
+}
+
+function csv() {
+  var csvContent = "data:text/csv;charset=utf-8,";
+  var array = [];
+  for(var i = 0; i < data.length; i++) {
+    array.push([data[i].email, data[i].date, data[i].ip]);
+  }
+  array.forEach(function(infoArray, index){
+     dataString = infoArray.join(",");
+     csvContent += index < array.length ? dataString+ "\n" : dataString;
+  });
+  var encodedUri = encodeURI(csvContent);
+  window.location = encodedUri;
 }

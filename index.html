@@ -11,13 +11,14 @@
 		ga('send', 'pageview');
 
 		var config = {
-	    apiKey: "AIzaSyCNfAl-ENmtYFdizw5nIMGUN67SJhNysXw",
-	    authDomain: "ugly-clothing.firebaseapp.com",
-	    databaseURL: "https://ugly-clothing.firebaseio.com",
-	    storageBucket: "ugly-clothing.appspot.com",
-	    messagingSenderId: "912016071315"
-	  };
+		    apiKey: "AIzaSyCNfAl-ENmtYFdizw5nIMGUN67SJhNysXw",
+		    authDomain: "ugly-clothing.firebaseapp.com",
+		    databaseURL: "https://ugly-clothing.firebaseio.com",
+		    storageBucket: "ugly-clothing.appspot.com",
+		    messagingSenderId: "912016071315"
+		  };
 		firebase.initializeApp(config);
+
 	</script>
 
 	<style>
@@ -60,7 +61,7 @@
 		<title>ugly.</title>
 	</head>
 
-	<body>
+	<body onload="getIP()">
 		<div style="position:absolute;top:20%;width:99%">
 			<div id="logo" style="width:100%;text-align: center">
 				<img src="logo.png" width="400">
@@ -74,6 +75,7 @@
 	</body>
 
 	<script>
+		var ip_address = "";
 		document.getElementById("email")
 		    .addEventListener("keyup", function(event) {
 		    event.preventDefault();
@@ -87,7 +89,7 @@
 			document.getElementById("email").disabled = true;
 			document.getElementById("button").disabled = true;
 			if(checkValid(address)) {
-				email(address);
+				push(address);
 			} else {
 				document.getElementById("email").value = ' ';
 				document.getElementById("button").disabled = false;
@@ -95,19 +97,19 @@
 			}
 		}
 		
-		function email(address) {	
-			var ip_address = "";
-			$.getJSON('https://api.ipify.org', function(data){
-			    console.log(data);
-			    ip_address = data;
-			});
-
+		function push(address) {
+			var temp = ip_address.responseText;
+			if(temp == undefined) temp = "";
 			firebase.database().ref('emails/').push({
-		    email: address,
-		    date: firebase.database.ServerValue.TIMESTAMP,
-		    ip : ip_address
-		  });
+			    email: address,
+			    date: firebase.database.ServerValue.TIMESTAMP,
+			    ip : temp
+			  });
 			document.getElementById("submission").innerHTML = "Thanks, bae"
+		}
+
+		function getIP() {
+			ip_address = $.getJSON('https://api.ipify.org', function(data) {});
 		}
 		
 		function checkValid(email) {
