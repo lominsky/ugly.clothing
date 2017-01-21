@@ -19,7 +19,11 @@ function init() {
     data = [];
     firebase.database().ref('/emails').orderByChild('date').once('value').then(function(snapshot) {
       snapshot.forEach(function(child) {
-          data.push(child.val())
+          if(child.val().hidden != "true") {
+            var temp = child.val();
+            temp.key = child.key;
+            data.push(temp);
+          }
       });
       addToTable();
     });  
@@ -59,7 +63,6 @@ function logout() {
 
 function addToTable() {
   var table = document.getElementById('table');
-  console.log(data);
 
   while (table.childElementCount > 1) {
       table.removeChild(table.lastChild);
@@ -83,8 +86,27 @@ function addToTable() {
     c3.innerHTML = data[i].ip;
     row.appendChild(c3);
 
+    var c4 = document.createElement('td');
+    var button = document.createElement('button');
+    button.innerHTML = "Remove";
+    button.setAttribute("class", "mdl-button mdl-js-button mdl-button--accent");
+    button.setAttribute("onclick", "remove(" + i + ")");
+    c4.appendChild(button);
+    row.appendChild(c4);
+
     table.appendChild(row);
   }
+}
+
+function remove(index) {
+  var temp = {
+    email: data[index].email,
+    date: data[index].date,
+    ip: data[index].ip,
+    hidden: "true"
+  }
+  firebase.database().ref('emails/' + data[index].key).set(temp);
+  location.reload();
 }
 
 function csv() {
