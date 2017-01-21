@@ -99,14 +99,16 @@ function addToTable() {
 }
 
 function remove(index) {
-  var temp = {
-    email: data[index].email,
-    date: data[index].date,
-    ip: data[index].ip,
-    hidden: "true"
+  if(confirm("Are you sure you want to remove " + data[index].email + "?")) {
+    var temp = data[index];
+    var key = data[index].key;
+    temp.hidden = "true";
+    delete temp.key;
+    firebase.database().ref('emails/' + key).set(temp);
+    var table = document.getElementById("table");
+    table.removeChild(table.childNodes[table.childNodes.length - data.length + index]);
+    //location.reload();
   }
-  firebase.database().ref('emails/' + data[index].key).set(temp);
-  location.reload();
 }
 
 function csv() {
